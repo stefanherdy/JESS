@@ -172,7 +172,7 @@ if __name__ == "__main__":
     parser.add_argument("--num_classes", type=int, default=8, help="Number of classes")
     parser.add_argument("--energy", type=bool, default=True, help="Set p(x) optimization on(True)/off(False)")
     parser.add_argument("--num_tests", type=int, default=10, help="Number of tests")
-    parser.add_argument("--test", choices=['norm', 'jess'], default='jess', help="Normal test or Joint Energy-Based Sematic Segmentation")
+    parser.add_argument("--test", choices=['norm', 'jess'], default='norm', help="Normal test or Joint Energy-Based Sematic Segmentation")
     parser.add_argument("--set", choices=['usa', 'john_handy', 'john_cam'], default='norm', help="Dataset")
 
     args = parser.parse_args()
