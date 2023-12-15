@@ -3,7 +3,6 @@
 import os
 import pickle
 import json
-os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 from utils import *
 import torch as t
 import torch.nn as nn 
