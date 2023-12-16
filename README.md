@@ -19,7 +19,7 @@ Usage
         --eval_every, type=int, default=1, help="Epochs between evaluation"
         --print_every, type=int, default=1, help="Epochs between print"
         --ckpt_every, type=int, default=20, help="Epochs between checkpoint save"
-        --energy, type=bool, default=True, help="Set p(x) optimization on(True)/off(False)"
+        parser.add_argument("--energy", choices=['True', 'False'], default=True, help="Set p(x) optimization on(True)/off(False)")
         --num_classes, type=int, default=8, help="Number of classes"
         --num_tests, type=int, default=10, help="Number of tests"
         --test, choices=['norm', 'jess'], default='norm', help="Normal test or Joint Energy-Based Sematic Segmentation"

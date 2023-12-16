@@ -31,8 +31,10 @@ np.random.seed(seed)
 t.manual_seed(seed)
 
 def main(args, test_number):
+    print(args.test)
+    print(args.energy)
     if args.test == 'jess':
-        if args.energy == True:
+        if args.energy == 'True':
             args.save_dir = './experiment/jess/True'
         else:
             args.save_dir = './experiment/jess/False'
@@ -46,7 +48,7 @@ def main(args, test_number):
             args.save_dir = './experiment/john_cam'
         args.epochs = 1000
     if args.test == 'norm':
-        args.energy = False
+        args.energy = 'False'
 
     makedirs(args.save_dir)
     with open(f'{args.save_dir}/params.txt', 'w') as f:
@@ -85,7 +87,7 @@ def main(args, test_number):
             x_train, y_train = next(iter(dload_train)) 
             x_train, y_train = x_train.to(device), y_train.to(device)
             Loss = 0.
-            if args.energy == True: 
+            if args.energy == 'True': 
                 x_adv, _ = next(iter(dload_sample))
                 if t.cuda.is_available():
                     x_adv = x_adv.to(device)
@@ -112,7 +114,7 @@ def main(args, test_number):
             Loss.backward()
             optim.step()
 
-        if args.energy == True:
+        if args.energy == 'True':
             if iteration % args.print_every == 0:
                 print('P(x) | {}:{:>d} f(x_val)={:>14.9f} f(x_adv)={:>14.9f} d={:>14.9f}'.format(epoch, i, f_all, f_adv,
                                                                                            f_all - f_adv))
@@ -149,13 +151,7 @@ def main(args, test_number):
             plt.grid()
             
             makedirs("./records")
-            with open("./records/trainlosses" + str(args.energy)  + '_' + str(test_number)  + '_' + str(args.set)  + ".txt" , "wb") as fp:   # Pickling Train Loss
-                pickle.dump(train_losses, fp)
-
-            with open("./records/vallosses" + str(args.energy)  + '_' + str(test_number)  + '_' + str(args.set)    + ".txt" , "wb") as fp:   # Pickling Validation Loss
-                pickle.dump(val_losses, fp)
-
-            with open("./records/correct" + str(args.energy)  + '_' + str(test_number)  + '_' + str(args.set)    + ".txt" , "wb") as fp:   # Pickling Accuracy
+            with open(f"./records/accuracy_{args.energy}_{str(test_number)}_{str(args.set)}.txt" , "wb") as fp:   # Pickling Accuracy
                 pickle.dump(val_corr, fp)
 
 
@@ -169,7 +165,7 @@ if __name__ == "__main__":
     parser.add_argument("--print_every", type=int, default=1, help="Epochs between print")
     parser.add_argument("--ckpt_every", type=int, default=20, help="Epochs between checkpoint save")
     parser.add_argument("--num_classes", type=int, default=8, help="Number of classes")
-    parser.add_argument("--energy", type=bool, default=True, help="Set p(x) optimization on(True)/off(False)")
+    parser.add_argument("--energy", choices=['True', 'False'], default=True, help="Set p(x) optimization on(True)/off(False)")
     parser.add_argument("--num_tests", type=int, default=10, help="Number of tests")
     parser.add_argument("--test", choices=['norm', 'jess'], default='norm', help="Normal test or Joint Energy-Based Sematic Segmentation")
     parser.add_argument("--set", choices=['usa', 'john_handy', 'john_cam'], default='norm', help="Dataset")

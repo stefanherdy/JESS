@@ -76,9 +76,6 @@ def predict_jess(args, model_true, model_false, dload, device):
         x_p_d, y_p_d = x_p_d.to(device), y_p_d.to(device)
         
         logits_true = model_true(x_p_d)
-        loss = nn.CrossEntropyLoss(reduce=False)(logits_true, y_p_d).cpu().numpy()
-        correct_true = np.mean((logits_true.max(1)[1] == y_p_d).float().cpu().numpy())
-        print('True: ' + str(correct_true))
         logits_max_true = logits_true.max(1)[1].float().cpu().numpy()
         label = y_p_d.float().cpu().numpy()
         IOU = mIOU(logits_max_true, label)
@@ -88,9 +85,6 @@ def predict_jess(args, model_true, model_false, dload, device):
         predicted_annotations_true= np.concatenate((predicted_annotations_true, (np.ndarray.flatten(np.array(logits_max_true)))))
         
         logits_false = model_false(x_p_d)
-        loss = nn.CrossEntropyLoss(reduce=False)(logits_false, y_p_d).cpu().numpy()
-        correct_false = np.mean((logits_false.max(1)[1] == y_p_d).float().cpu().numpy())
-        print('False: ' + str(correct_false))
         logits_max_false = logits_false.max(1)[1].float().cpu().numpy()
         IOU = mIOU(logits_max_false, label)
         iou_list_false.append(IOU)
@@ -114,13 +108,11 @@ def predict(args, model, dload, device):
     predicted_annotations = np.array([])
     for i, (x_p_d, y_p_d) in enumerate(dload):
         x_p_d, y_p_d = x_p_d.to(device), y_p_d.to(device)
-
         model.eval()
         logits = model(x_p_d)
-        loss = nn.CrossEntropyLoss(reduce=False)(logits, y_p_d).cpu().numpy()
         correct = np.mean((logits.max(1)[1] == y_p_d).float().cpu().numpy())
         print('True: ' + str(i) + '_' + str(correct))
-        correctlist.append(correct)
+        correctlist.append(correct)        
         logits_max = logits.max(1)[1].float().cpu().numpy()
         label = y_p_d.float().cpu().numpy() 
         IOU = mIOU(logits_max, label)
