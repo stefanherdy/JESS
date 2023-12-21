@@ -74,7 +74,7 @@ def predict_jess(args, model_true, model_false, dload, device):
 
     for i, (x_p_d, y_p_d) in enumerate(dload):
         x_p_d, y_p_d = x_p_d.to(device), y_p_d.to(device)
-        
+        model_true.eval()        
         logits_true = model_true(x_p_d)
         logits_max_true = logits_true.max(1)[1].float().cpu().numpy()
         label = y_p_d.float().cpu().numpy()
@@ -84,6 +84,7 @@ def predict_jess(args, model_true, model_false, dload, device):
         target_annotations_true= np.concatenate((target_annotations_true, (np.ndarray.flatten(np.array(label)))))
         predicted_annotations_true= np.concatenate((predicted_annotations_true, (np.ndarray.flatten(np.array(logits_max_true)))))
         
+        model_false.eval()
         logits_false = model_false(x_p_d)
         logits_max_false = logits_false.max(1)[1].float().cpu().numpy()
         IOU = mIOU(logits_max_false, label)
