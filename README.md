@@ -19,11 +19,11 @@ Usage
         --eval_every, type=int, default=1, help="Epochs between evaluation"
         --print_every, type=int, default=1, help="Epochs between print"
         --ckpt_every, type=int, default=20, help="Epochs between checkpoint save"
-        parser.add_argument("--energy", choices=['True', 'False'], default=True, help="Set p(x) optimization on(True)/off(False)")
+        --energy, choices=['True', 'False'], default='True', help="Set p(x) optimization on(True)/off(False)"
         --num_classes, type=int, default=8, help="Number of classes"
         --num_tests, type=int, default=10, help="Number of tests"
         --test, choices=['norm', 'jess'], default='norm', help="Normal test or Joint Energy-Based Sematic Segmentation"
-        --set, choices=['usa', 'john_handy', 'john_cam'], default='norm', help="Dataset"
+        --set, choices=['usa', 'john_handy', 'john_cam'], default='usa', help="Dataset"
 
         Example usage:
         "python train_jess.py --test norm --set usa --learnrate 0.00001 --batch_size 16
@@ -50,6 +50,4 @@ Usage
         Example usage:
         "python neighbors.py --test norm --set usa 
 
-License
-
-This project is licensed under the MIT License. ©️ 2023 Stefan Herdy
+©️ 2023 Stefan Herdy

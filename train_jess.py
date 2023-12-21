@@ -34,6 +34,7 @@ def main(args, test_number):
     print(args.test)
     print(args.energy)
     if args.test == 'jess':
+        args.set = 'john'
         if args.energy == 'True':
             args.save_dir = './experiment/jess/True'
         else:
@@ -165,15 +166,16 @@ if __name__ == "__main__":
     parser.add_argument("--print_every", type=int, default=1, help="Epochs between print")
     parser.add_argument("--ckpt_every", type=int, default=20, help="Epochs between checkpoint save")
     parser.add_argument("--num_classes", type=int, default=8, help="Number of classes")
-    parser.add_argument("--energy", choices=['True', 'False'], default=True, help="Set p(x) optimization on(True)/off(False)")
-    parser.add_argument("--num_tests", type=int, default=10, help="Number of tests")
+    parser.add_argument("--energy", choices=['True', 'False'], default='True', help="Set p(x) optimization on(True)/off(False)")
+    parser.add_argument("--num_tests", type=int, default=6, help="Number of tests")
     parser.add_argument("--test", choices=['norm', 'jess'], default='norm', help="Normal test or Joint Energy-Based Sematic Segmentation")
-    parser.add_argument("--set", choices=['usa', 'john_handy', 'john_cam'], default='norm', help="Dataset")
-
+    parser.add_argument("--set", choices=['usa', 'john_handy', 'john_cam'], default='usa', help="Dataset")
     args = parser.parse_args()
 
     for test_number in range(args.num_tests):
         main(args, test_number)
+
+    visualize(args.num_tests)
 
 
 

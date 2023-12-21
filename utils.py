@@ -10,6 +10,10 @@ from os import walk
 import torch as t
 import numpy as np
 import torch.nn as nn
+import pickle
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.signal import savgol_filter
 
 
 def get_files(path):
@@ -230,3 +234,60 @@ def mIOU(pred, label, num_classes=8):
         iou_list.append(iou_now)
         miou = np.mean(present_iou_list)
     return miou
+
+def visualize(num_trainings):
+    mean_true_list = []
+    mean_false_list = []
+
+    for i in range(num_trainings):
+        with open(f'./records_reproduce/correctTrue_{i}_john.txt', "rb") as fp:
+            true_corr = pickle.load(fp)
+
+        with open(f'./records_reproduce/correctFalse_{i}_john.txt', "rb") as fp:
+            false_corr = pickle.load(fp)
+
+        mean_true_list.append(true_corr)
+        mean_false_list.append(false_corr)
+
+    stacked_mean_true = np.stack(mean_true_list, axis=0)
+    stacked_mean_false = np.stack(mean_false_list, axis=0)
+
+    mean_true = np.mean(stacked_mean_true[:,20:80], axis=0)
+    mean_false = np.mean(stacked_mean_false[:,20:80], axis=0)
+
+    print('____True____:')
+    print('Mean:')
+    print(np.mean(mean_true))
+    print('Std:')
+    print(np.std(mean_true))
+    print('Sterr:')
+    print(np.std(mean_true) / np.sqrt(num_trainings))
+
+    print('____False____:')
+    print('Mean:')
+    print(np.mean(mean_false))
+    print('Std:')
+    print(np.std(mean_false))
+    print('Sterr:')
+    print(np.std(mean_false) / np.sqrt(num_trainings))
+
+    mean_true_plot = np.mean(stacked_mean_true, axis=0)
+    mean_false_plot = np.mean(stacked_mean_false, axis=0)
+
+
+    # Smooth the data for visuaization
+    trues_smooth = savgol_filter(mean_true_plot, 7, 1)
+    falses_smooth = savgol_filter(mean_false_plot, 7, 1)
+
+    # Plot the data
+    fig= plt.figure()
+    plt.plot(trues_smooth, label="Acc. True", color='firebrick')
+    plt.plot(falses_smooth, label="Acc. False", color='skyblue')
+
+    plt.title('Training performance JEM vs. normal')
+    plt.ylabel('Accuracy [%]')
+    plt.xlabel('Epoch')
+    plt.legend()
+    plt.grid()
+
+    plt.show()
