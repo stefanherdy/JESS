@@ -94,11 +94,11 @@ def main(args, test_number):
                     x_adv = x_adv.to(device)
 
                 f_all = f(x_val)
-                f_all = t.mean(f_all, (2,3))
                 f_all = f_all.logsumexp(1)
+                f_all = t.mean(f_all, (1,2))
                 f_adv = f(x_adv)
-                f_adv = t.mean(f_adv, (2,3))
                 f_adv = f_adv.logsumexp(1)
+                f_adv = t.mean(f_adv, (1,2))
 
                 f_all = t.mean(f_all)
                 f_adv = t.mean(f_adv)
